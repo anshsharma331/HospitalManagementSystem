@@ -1,0 +1,103 @@
+{% extends 'navbar.html' %}
+
+{% block title %}Appointment Details{% endblock %}
+
+{% block content %}
+<style>
+    /* CSS styles for appointment details */
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .appointment-details {
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .appointment-details h2 {
+        color: #333;
+        margin-bottom: 10px;
+    }
+    
+    .appointment-details-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    
+    .appointment-details-table th,
+    .appointment-details-table td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    .appointment-details-table th {
+        text-align: left;
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+    
+    .appointment-details-table td {
+        vertical-align: top;
+    }
+    
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+    
+    .btn-pdf {
+        background-color: #dc3545; /* Red color */
+        color: #fff;
+        text-decoration: none;
+    }
+    
+    .btn-pdf:hover {
+        background-color: #c82333; /* Darker red color on hover */
+    }
+    
+    .btn-excel {
+        background-color: #28a745; /* Green color */
+        color: #fff;
+        text-decoration: none;
+    }
+    
+    .btn-excel:hover {
+        background-color: #218838; /* Darker green color on hover */
+    }
+    
+</style>
+
+<div class="container">
+    <div class="appointment-details">
+        <h2>Appointment Details</h2>
+        <table class="appointment-details-table">
+            <tr>
+                <th>Patient</th>
+                <td>{{ appointment.patient }}</td>
+            </tr>
+            <tr>
+                <th>Doctor</th>
+                <td>{{ appointment.doctor }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ appointment.date }}</td>
+            </tr>
+            <tr>
+                <th>Time</th>
+                <td>{{ appointment.time }}</td>
+            </tr>
+            <!-- Add more appointment details here -->
+        </table>
+        <a href="{% url 'download_appointment_excel' appointment.id %}" class="btn btn-excel">Download Excel</a>
+        <a href="{% url 'download_appointment_pdf' appointment.id %}" class="btn btn-pdf">Download PDF</a>
+    </div>
+</div>
+{% endblock %}

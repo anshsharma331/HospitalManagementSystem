@@ -1,0 +1,180 @@
+{% extends 'navbar.html' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<style>
+    .slideshow-container {
+        max-width: 800px;
+        position: relative;
+        margin: auto;
+        overflow: hidden;
+        border-radius: 10px;
+    }
+
+    .mySlides {
+        display: none;
+    }
+
+    .mySlides img {
+        vertical-align: middle;
+        max-width: 100%;
+        border-radius: 10px;
+    }
+
+    .fade {
+        animation-name: fade;
+        animation-duration: 1s;
+    }
+
+    @keyframes fade {
+        from { opacity: .4 }
+        to { opacity: 1 }
+    }
+
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        margin: 20px 0;
+    }
+
+    .benefit, .column {
+        background-color: #f9f9f9;
+        border: 1px solid #87CEFA;
+        padding: 20px;
+        margin: 10px;
+        width: calc(33% - 40px);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .benefit:hover, .column:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .column h3, .benefit h3 {
+        color: #4682B4;
+    }
+
+    .health-benefits {
+        background-color: #e6f7ff;
+        border-radius: 10px;
+        padding: 20px;
+    }
+
+    .columns {
+        display: flex;
+        justify-content: space-around;
+        margin: 20px 0;
+        background-color: #e6f7ff;
+        border-radius: 10px;
+        padding: 20px;
+    }
+
+    .column, .benefit {
+        background-color: #ffffff;
+    }
+
+    .benefit:nth-child(odd) {
+        background-color: #f0f8ff;
+    }
+
+    .benefit:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .column:nth-child(odd) {
+        background-color: #f0f8ff;
+    }
+
+    .column:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .content-container {
+        padding: 20px;
+        background: linear-gradient(to right bottom, #ffffff, #f0f8ff);
+    }
+</style>
+
+<div class="slideshow-container">
+    <div class="mySlides fade">
+        <img src="{% static 'images/image1.jpg' %}" alt="Image 1">
+    </div>
+    <div class="mySlides fade">
+        <img src="{% static 'images/image2.jpg' %}" alt="Image 2">
+    </div>
+    <div class="mySlides fade">
+        <img src="{% static 'images/image3.jpg' %}" alt="Image 3">
+    </div>
+    <div class="mySlides fade">
+        <img src="{% static 'images/image4.jpg' %}" alt="Image 4">
+    </div>
+</div>
+<br>
+
+<div class="content-container">
+    <div class="container health-benefits">
+        <div class="benefit">
+            <h3>Comprehensive Care</h3>
+            <p>We offer a wide range of medical services to ensure you get the care you need.</p>
+        </div>
+        <div class="benefit">
+            <h3>Expert Doctors</h3>
+            <p>Our doctors are highly qualified and experienced in their respective fields.</p>
+        </div>
+        <div class="benefit">
+            <h3>Advanced Technology</h3>
+            <p>We use the latest medical technology to provide the best possible care.</p>
+        </div>
+        <div class="benefit">
+            <h3>Patient-Centered Approach</h3>
+            <p>We prioritize your comfort and well-being in every step of your treatment.</p>
+        </div>
+        <div class="benefit">
+            <h3>Emergency Services</h3>
+            <p>Our emergency department is open 24/7 to handle any urgent medical needs.</p>
+        </div>
+        <div class="benefit">
+            <h3>Supportive Staff</h3>
+            <p>Our staff is here to help you with any questions or concerns you may have.</p>
+        </div>
+    </div>
+
+    <div class="columns">
+        <div class="column">
+            <h3>Patient Guide</h3>
+            <p>Access important information and resources for patients. This includes preparation for visits, navigating the hospital, and post-treatment care instructions.</p>
+        </div>
+        <div class="column">
+            <h3>Diseases We Treat</h3>
+            <p>Learn about the various conditions and diseases we specialize in treating, from common illnesses to complex conditions requiring specialized care.</p>
+        </div>
+        <div class="column">
+            <h3>About Our Hospital</h3>
+            <p>Discover more about our history, mission, and values. Learn about our commitment to providing high-quality healthcare and the communities we serve.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    let slideIndex = 0;
+    showSlides();
+
+    function showSlides() {
+        let slides = document.getElementsByClassName("mySlides");
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";  
+        }
+        slideIndex++;
+        if (slideIndex > slides.length) {slideIndex = 1}    
+        slides[slideIndex-1].style.display = "block";  
+        setTimeout(showSlides, 1500); 
+    }
+</script>
+{% endblock %}

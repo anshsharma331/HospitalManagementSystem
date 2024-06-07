@@ -1,0 +1,124 @@
+{% extends 'navbar.html' %}
+{% block title %}Edit Doctor Profile{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        color: #007bff;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    form {
+        margin-top: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="number"],
+    textarea,
+    select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    select[multiple] {
+        height: 200px;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<div class="navbar">
+    <h2>Edit Doctor Profile</h2>
+</div>
+
+<div class="container">
+    <h1>Edit Profile</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_first_name">First Name:</label>
+            {{ form.first_name }}
+        </div>
+        <div class="form-group">
+            <label for="id_last_name">Last Name:</label>
+            {{ form.last_name }}
+        </div>
+        <div class="form-group">
+            <label for="id_date_of_birth">Date of Birth:</label>
+            {{ form.date_of_birth }}
+        </div>
+        <div class="form-group">
+            <label for="id_phone_number">Phone Number:</label>
+            {{ form.phone_number }}
+        </div>
+        <div class="form-group">
+            <label for="id_address">Address:</label>
+            {{ form.address }}
+        </div>
+        <div class="form-group">
+            <label for="id_speciality">Speciality:</label>
+            {{ form.speciality }}
+        </div>
+        <div class="form-group">
+            <label for="id_diseases">Diseases:</label>
+            {{ form.diseases }}
+        </div>
+        <div class="form-group">
+            <label for="id_experience">Experience:</label>
+            {{ form.experience }}
+        </div>
+        <button type="submit">Update Profile</button>
+    </form>
+</div>
+{% endblock %}

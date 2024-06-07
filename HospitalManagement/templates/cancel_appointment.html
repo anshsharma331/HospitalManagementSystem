@@ -1,0 +1,70 @@
+{% extends "navbar.html" %}
+
+{% block title %}Cancel Appointment{% endblock %}
+
+{% block content %}
+<style>
+  .cancel-appointment-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  .cancel-appointment-container h1 {
+    margin-bottom: 20px;
+  }
+
+  .cancel-appointment-container p {
+    font-size: 16px;
+    margin-bottom: 30px;
+  }
+
+  .cancel-appointment-container .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px 5px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+
+  .cancel-appointment-container .btn-cancel {
+    background-color: #dc3545; /* Bootstrap red color */
+  }
+
+  .cancel-appointment-container .btn-cancel:hover {
+    background-color: #c82333;
+  }
+
+  .cancel-appointment-container .btn-back {
+    background-color: #6c757d; /* Bootstrap secondary color */
+  }
+
+  .cancel-appointment-container .btn-back:hover {
+    background-color: #5a6268;
+  }
+</style>
+
+<div class="cancel-appointment-container">
+  <h1>Cancel Appointment</h1>
+  <p>Are you sure you want to cancel the appointment with Dr. {{ object.doctor.first_name }} {{ object.doctor.last_name }} on {{ object.date }} at {{ object.time }}?</p>
+  
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-cancel">Yes, cancel appointment</button>
+</form>
+
+{% if appointment.patient %}
+    <a href="{% url 'patient_dashboard' pk=appointment.patient.pk %}" class="btn btn-back">No, go back to dashboard</a>
+
+    
+{% endif %}
+</div>
+{% endblock %}

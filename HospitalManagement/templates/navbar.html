@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static%}
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-Jo8r5Gg8l6oSlA+r2Ldgr4TtMS1TXDYeVF+6kCv50NtzUJ5x/kSTh20F1CQcmqDNTiXnj0n1suYdYilR5a1AQQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}HealthPlus{% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #9FE2BF;
+        }
+
+        .navbar {
+            background-color: #89CDD0;
+            color: white;
+            padding: 10px 20px;
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-logo img {
+            height: 50px;
+        }
+
+        .navbar-title {
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .navbar-title h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .navbar-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px;
+            position: relative;
+        }
+
+        .navbar-links a:hover {
+            background-color: #4682B4;
+            border-radius: 5px;
+        }
+
+        .navbar-links .popup {
+            display: none;
+            position: absolute;
+            background-color: white;
+            color: #000;
+            border: 1px solid #87CEFA;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            top: calc(100% + 5px);
+            left: 0;
+            width: 300px;
+        }
+
+        .navbar-links a:hover .popup {
+            display: block;
+        }
+
+        .navbar-links .popup::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            border-width: 0 10px 10px;
+            border-style: solid;
+            border-color: transparent transparent white;
+        }
+
+        .navbar-links .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .navbar-links .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .navbar-links .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .button {
+            background-color: #4682B4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #5A9BD3;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <a href="{% url 'welcome' %}"><img src="{% static 'images/logo.jpeg' %}" alt="Hospital Logo"></a>
+            </div>
+            <div class="navbar-title">
+                <h1>HealthPlus</h1>
+            </div>
+            <div class="navbar-links">
+                <div class="navbar-row">
+                    <a href="#" class="about-us-link">About Us
+                        <div class="popup">
+                            <h4>About Us</h4>
+                            <p>We are committed to providing high-quality healthcare services to our community. Learn more about our mission and values.</p>
+                        </div>
+                    </a>
+                    <a href="#" class="contact-link">Contact
+                        <div class="popup">
+                            <h4>Contact</h4>
+                            <p>Phone: (123) 456-7890</p>
+                            <p>Email: info@healthplus.com</p>
+                        </div>
+                    </a>
+                    <a href="#">Emergency</a>
+                    
+                        <div class="popup">
+                            <h4>Book an Appointment</h4>
+                            <p>Call us at (123) 456-7890 or visit our contact page to schedule an appointment.</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="navbar-row">
+                    
+                    {% if user.is_authenticated %}
+                        <div class="dropdown">
+                            <button class="button">{{ user.username }}</button>
+                            <div class="dropdown-content">
+                                {% if user.is_patient %}
+                                    <a href="{% url 'patient_dashboard' %}">Dashboard</a>
+                                {% elif user.is_doctor %}
+                                    <a href="{% url 'doctor_dashboard' %}">Dashboard</a>
+                                {% endif %}
+                                <form action="{% url 'logout' %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit">Logout</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="button">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script>
+        // Close the dropdown menu if the user clicks outside of it
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropdown')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.style.display === "block") {
+                        openDropdown.style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

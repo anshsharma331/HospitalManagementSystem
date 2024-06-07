@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            width: 90%;
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #333;
+        }
+        p, ul {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        strong {
+            font-weight: bold;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section:last-child {
+            margin-bottom: 0;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Appointment Details</h1>
+        
+        <div class="section">
+            <h2>Patient Information</h2>
+            <p><strong>Name:</strong> {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</p>
+            <p><strong>Date of Birth:</strong> {{ appointment.patient.date_of_birth }}</p>
+            <p><strong>Phone Number:</strong> {{ appointment.patient.phone_number }}</p>
+            <p><strong>Address:</strong> {{ appointment.patient.address }}</p>
+        </div>
+        
+        <div class="section">
+            <h2>Doctor Information</h2>
+            <p><strong>Name:</strong> {{ appointment.doctor.first_name }} {{ appointment.doctor.last_name }}</p>
+            <p><strong>Speciality:</strong> {{ appointment.doctor.speciality }}</p>
+            <p><strong>Experience:</strong> {{ appointment.doctor.experience }}</p>
+        </div>
+        
+        <div class="section">
+            <h2>Diseases</h2>
+            <ul>
+            {% for disease in appointment.patient.diseases.all %}
+                <li>{{ disease.name }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Appointment Details</h2>
+            <p><strong>Date:</strong> {{ appointment.date }}</p>
+            <p><strong>Time:</strong> {{ appointment.time }}</p>
+        </div>
+    </div>
+</body>
+</html>

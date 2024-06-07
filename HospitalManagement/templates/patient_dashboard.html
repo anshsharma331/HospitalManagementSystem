@@ -1,0 +1,239 @@
+{% extends 'navbar.html' %}
+<head>
+    <!-- Other meta tags and stylesheets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-Jo8r5Gg8l6oSlA+r2Ldgr4TtMS1TXDYeVF+6kCv50NtzUJ5x/kSTh20F1CQcmqDNTiXnj0n1suYdYilR5a1AQQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+{% block title %}Patient Dashboard{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    .container {
+        width: 80%;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f4f4f4;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .profile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .profile-header h1 {
+        margin: 0;
+    }
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px 0;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+    .btn:hover {
+        background-color: #0056b3;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+    }
+    th {
+        background-color: #007bff;
+        color: white;
+    }
+    .appointment-section {
+        margin-top: 40px;
+    }
+    .edit-profile-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px 0;
+        background-color: #28a745; /* Green color */
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+    .edit-profile-btn:hover {
+        background-color: #218838; /* Darker green color on hover */
+    }
+    .details-column {
+        text-align: center;
+    }
+    .details-column a {
+        margin-right: 10px;
+    }
+    .cancel-btn {
+        display: inline-block;
+        padding: 8px 12px;
+        margin: 5px;
+        background-color: #dc3545; /* Red color */
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+    .cancel-btn:hover {
+        background-color: #c82333; /* Darker red color on hover */
+    }
+    .reschedule-btn {
+        display: inline-block;
+        padding: 8px 12px;
+        margin: 5px;
+        background-color: #ffc107; /* Yellow color */
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+    .reschedule-btn:hover {
+        background-color: #e0a800; /* Darker yellow color on hover */
+    }
+    .download-btn {
+        display: inline-block;
+        padding: 8px 12px;
+        margin: 5px;
+        background-color: #17a2b8; /* Blue color */
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+    .download-btn:hover {
+        background-color: #138496; /* Darker blue color on hover */
+    }
+</style>
+
+<div class="container">
+    <div class="profile-header">
+        <h1>Patient Dashboard</h1>
+        <a href="{% url 'edit_patient' pk=patient.pk %}" class="edit-profile-btn">Edit Profile</a>
+        <a href="{% url 'book_appointment' %}" class="btn">Book an Appointment</a>
+    </div>
+
+    <h2>Patient Details</h2>
+    <table>
+        <tr>
+            <th>First Name</th>
+            <td>{{ patient.first_name }}</td>
+        </tr>
+        <tr>
+            <th>Last Name</th>
+            <td>{{ patient.last_name }}</td>
+        </tr>
+        <tr>
+            <th>Date of Birth</th>
+            <td>{{ patient.date_of_birth }}</td>
+        </tr>
+        <tr>
+            <th>Phone Number</th>
+            <td>{{ patient.phone_number }}</td>
+        </tr>
+        <tr>
+            <th>Address</th>
+            <td>{{ patient.address }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{ patient.user.email }}</td> <!-- Accessing email through related User object -->
+        </tr>
+        <tr>
+            <th>Diseases</th>
+            <td>
+                <ul>
+                {% for disease in patient.diseases.all %}
+                    <li>{{ disease.name }}</li>
+                {% endfor %}
+                </ul>
+            </td>
+        </tr>
+    </table>
+
+    <div class="appointment-section">
+        <h2>Appointments</h2>
+        <h3>Current Appointments</h3>
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>Doctor</th>
+                <th>Time</th>
+                <th>Details</th> <!-- New column for appointment details -->
+                <th>Actions</th> <!-- New column for actions -->
+            </tr>
+            {% for appointment in current_appointments %}
+            <tr>
+                <td>{{ appointment.date }}</td>
+                <td>{{ appointment.doctor.first_name }} {{ appointment.doctor.last_name }}</td>
+                <td>{{ appointment.time }}</td>
+                <td class="details-column">
+                    <a href="{% url 'appointment_details' appointment.id %}" class="download-btn">Download</a> <!-- Link to download appointment details -->
+                </td>
+                <td class="details-column">
+                    <a href="{% url 'cancel_appointment' appointment.id %}" class="cancel-btn">Cancel</a>
+                    <a href="{% url 'reschedule_appointment' appointment.id %}" class="reschedule-btn">Reschedule</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <h3>Past Appointments</h3>
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>Doctor</th>
+                <th>Time</th>
+                <th>Details</th> <!-- New column for appointment details -->
+            </tr>
+            {% for appointment in past_appointments %}
+            <tr>
+                <td>{{ appointment.date }}</td>
+                <td>{{ appointment.doctor.first_name }} {{ appointment.doctor.last_name }}</td>
+                <td>{{ appointment.time }}</td>
+                <td class="details-column">
+                    <a href="{% url 'appointment_details' appointment.id %}" class="download-btn">Download</a> <!-- Link to download appointment details -->
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <h3>Upcoming Appointments</h3>
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>Doctor</th>
+                <th>Time</th>
+                <th>Details</th> <!-- New column for appointment details -->
+                <th>Actions</th> <!-- New column for actions -->
+            </tr>
+            {% for appointment in pending_appointments %}
+            <tr>
+                <td>{{ appointment.date }}</td>
+                <td>{{ appointment.doctor.first_name }} {{ appointment.doctor.last_name }}</td>
+                <td>{{ appointment.time }}</td>
+                <td class="details-column">
+                    <a href="{% url 'appointment_details' appointment.id %}" class="download-btn">Download</a> <!-- Link to download appointment details -->
+                </td>
+                <td class="details-column">
+                    <a href="{% url 'cancel_appointment' appointment.id %}" class="cancel-btn">Cancel</a>
+                    <a href="{% url 'reschedule_appointment' appointment.id %}" class="reschedule-btn">Reschedule</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}

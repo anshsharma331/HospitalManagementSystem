@@ -1,0 +1,75 @@
+{% extends "navbar.html" %}
+
+{% block title %}Reschedule Appointment{% endblock %}
+
+{% block content %}
+<style>
+    .reschedule-appointment-container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #f4f4f4;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .reschedule-appointment-container h1 {
+        margin-bottom: 20px;
+    }
+
+    .reschedule-appointment-container form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .reschedule-appointment-container label {
+        margin-top: 10px;
+        font-size: 16px;
+    }
+
+    .reschedule-appointment-container input {
+        margin: 10px 0;
+        padding: 10px;
+        width: 80%;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .reschedule-appointment-container .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px 0;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        border: none;
+        cursor: pointer;
+    }
+
+    .reschedule-appointment-container .btn:hover {
+        background-color: #0056b3;
+    }
+
+    .reschedule-appointment-container .btn-back {
+        background-color: #6c757d; /* Bootstrap secondary color */
+    }
+
+    .reschedule-appointment-container .btn-back:hover {
+        background-color: #5a6268;
+    }
+</style>
+
+<div class="reschedule-appointment-container">
+    <h1>Reschedule Appointment</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn">Save changes</button>
+        <a href="{% url 'patient_dashboard' pk=appointment.patient.pk %}" class="btn btn-back">Cancel</a>
+    </form>
+</div>
+{% endblock %}

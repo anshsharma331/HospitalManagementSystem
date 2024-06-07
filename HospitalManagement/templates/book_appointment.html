@@ -1,0 +1,170 @@
+{% extends 'navbar.html' %}
+{% block title %}Book an Appointment{% endblock %}
+
+{% block content %}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f7f7f7;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 30px;
+        font-size: 28px;
+    }
+    form {
+        margin-top: 20px;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #555;
+    }
+    select, input[type="date"], input[type="time"] {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+    button {
+        width: 100%;
+        padding: 15px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 18px;
+        transition: background-color 0.3s;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<div class="container">
+    <h1>Book an Appointment</h1>
+    <form method="post" id="appointment-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_disease">Disease:</label>
+            <select name="disease" id="id_disease">
+                <option value="">Select Disease</option>
+                {% for disease in diseases %}
+                    <option value="{{ disease.id }}">{{ disease.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="id_doctor">Doctor:</label>
+            <select name="doctor" id="id_doctor">
+                <option value="">Select Doctor</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="id_date">Date:</label>
+            <input type="date" name="date" id="id_date" min="{{ today }}">
+        </div>
+        <div class="form-group">
+            <label for="id_time">Time:</label>
+            <select name="time" id="id_time">
+                <option value="">Select Time</option>
+                {% for time_slot in time_slots %}
+                    <option value="{{ time_slot }}">{{ time_slot }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit">Book Appointment</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const diseaseSelect = document.getElementById('id_disease');
+        const doctorSelect = document.getElementById('id_doctor');
+        const dateInput = document.getElementById('id_date');
+        const timeSelect = document.getElementById('id_time');
+        const errorMessage = document.getElementById('error-message'); // Added error message element
+      
+        diseaseSelect.addEventListener('change', function () {
+          const selectedDisease = diseaseSelect.value;
+          if (selectedDisease) {
+            fetch(`/get-doctors/?disease=${selectedDisease}`)
+              .then(response => response.json())
+              .then(data => {
+                doctorSelect.innerHTML = '<option value="">Select Doctor</option>';
+                data.forEach(doctor => {
+                  const option = document.createElement('option');
+                  option.value = doctor.user_id;
+                  option.textContent = `${doctor.first_name} ${doctor.last_name}`;
+                  doctorSelect.appendChild(option);
+                });
+              })
+              .catch(error => {
+                console.error('Error fetching doctors:', error);
+                errorMessage.textContent = 'Error fetching doctors. Please try again later.'; // Display user-friendly error message
+              });
+          } else {
+            doctorSelect.innerHTML = '<option value="">Select Doctor</option>';
+          }
+        });
+      
+        function updateAvailableTimes() {
+          const doctorId = doctorSelect.value;
+          const date = dateInput.value;
+          console.log(`Doctor ID: ${doctorId}, Date: ${date}`);
+      
+          if (doctorId && doctorId !== 'undefined' && date) {
+            fetch(`/get-available-times/?doctor_id=${doctorId}&date=${date}`)
+              .then(response => response.json())
+              .then(data => {
+                console.log('Available times:', data);
+                timeSelect.innerHTML = '<option value="">Select Time</option>';
+                data.forEach(time => {
+                  const option = document.createElement('option');
+                  option.value = time;
+                  option.textContent = time;
+                  timeSelect.appendChild(option);
+                });
+              })
+              .catch(error => {
+                console.error('Error fetching available times:', error);
+                errorMessage.textContent = 'Error fetching available times. Please try again later.'; // Display user-friendly error message
+              });
+          } else {
+            timeSelect.innerHTML = '<option value="">Select Time</option>';
+          }
+        }
+      
+        doctorSelect.addEventListener('change', updateAvailableTimes);
+        dateInput.addEventListener('change', updateAvailableTimes);
+      
+        // Set minimum date to today for date input
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.setAttribute('min', today);
+      
+        // Add a loading indicator (optional)
+        const loadingIndicator = document.createElement('div'); // ... (implement loading indicator logic)
+      });
+    
+</script>
+
+{% endblock %}

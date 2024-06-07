@@ -1,0 +1,199 @@
+{% extends 'navbar.html' %}
+{% block title %}Doctor Dashboard{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        color: #007bff;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    .pending-patients {
+        max-height: 200px;
+        overflow-y: scroll;
+    }
+
+    .edit-profile-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px 0;
+        background-color: #28a745; /* Green color */
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .edit-profile-btn:hover {
+        background-color: #218838;
+    }
+</style>
+
+<div class="navbar">
+    <h2>HealthPlus</h2>
+</div>
+
+<div class="container">
+    <h1>Welcome, Dr. {{ doctor.last_name }}</h1>
+    
+    <a href="{% url 'edit_doctor' doctor.pk %}" class="edit-profile-btn">Edit Profile</a>
+
+    <h2>Profile Information</h2>
+    <table>
+        <tbody>
+            <tr>
+                <th>First Name</th>
+                <td>{{ doctor.first_name }}</td>
+            </tr>
+            <tr>
+                <th>Last Name</th>
+                <td>{{ doctor.last_name }}</td>
+            </tr>
+            <tr>
+                <th>Date of Birth</th>
+                <td>{{ doctor.date_of_birth }}</td>
+            </tr>
+            <tr>
+                <th>Phone Number</th>
+                <td>{{ doctor.phone_number }}</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>{{ doctor.address }}</td>
+            </tr>
+            <tr>
+                <th>Speciality</th>
+                <td>{{ doctor.speciality }}</td>
+            </tr>
+            <tr>
+                <th>Experience</th>
+                <td>{{ doctor.experience }} years</td>
+            </tr>
+            <tr>
+                <th>Diseases that Can Be Cured</th>
+                <td>
+                    {% for disease in doctor.diseases.all %}
+                        {{ disease.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Appointment Overview</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Total Patients with Appointments</th>
+                <th>Today's Appointments</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ total_patients_with_appointments }}</td>
+                <td>{{ todays_appointments }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Pending Patients</h2>
+    <div class="pending-patients">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Date of Birth</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                    <th>Appointment Time</th>
+                    <th>Diseases</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment in pending_appointments %}
+                <tr>
+                    <td>{{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</td>
+                    <td>{{ appointment.patient.date_of_birth }}</td>
+                    <td>{{ appointment.patient.phone_number }}</td>
+                    <td>{{ appointment.patient.user.email }}</td>
+                    <td>{{ appointment.time }}</td>
+                    <td>
+                        {% for disease in appointment.patient.diseases.all %}
+                            {{ disease.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h2>Past Appointments</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Patient Name</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Doctor</th>
+                <th>Diseases</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appointment in past_appointments %}
+            <tr>
+                <td>{{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</td>
+                <td>{{ appointment.date }}</td>
+                <td>{{ appointment.time }}</td>
+                <td>Dr. {{ appointment.doctor.first_name }} {{ appointment.doctor.last_name }}</td>
+                <td>
+                    {% for disease in appointment.patient.diseases.all %}
+                        {{ disease.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
